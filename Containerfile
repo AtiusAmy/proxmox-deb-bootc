@@ -1,7 +1,8 @@
-FROM docker.io/library/debian:unstable
+FROM docker.io/library/debian:13
 
 COPY files/37composefs/ /usr/lib/dracut/modules.d/37composefs/
 COPY files/ostree/prepare-root.conf /usr/lib/ostree/prepare-root.conf
+COPY scripts /
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -35,11 +36,20 @@ RUN --mount=type=tmpfs,dst=/tmp cd /tmp && \
     meson setup build --prefix=/usr --default-library=shared -Dfuse=enabled && \
     ninja -C build && \
     ninja -C build install
+    
+    
+RUN apt install -y wget
+
+RUN scripts/proxmox.sh
 
 RUN apt install -y \
   dracut \
   podman \
-  linux-image-generic \
+  proxmox-default-kernel \
+  proxmox-ve \
+  postfix \
+  open-iscsi \
+  chrony \
   firmware-linux-free \
   systemd \
   btrfs-progs \
