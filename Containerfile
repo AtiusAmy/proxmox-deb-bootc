@@ -2,7 +2,7 @@ FROM docker.io/library/debian:unstable
 
 COPY files/37composefs/ /usr/lib/dracut/modules.d/37composefs/
 COPY files/ostree/prepare-root.conf /usr/lib/ostree/prepare-root.conf
-COPY scripts /
+COPY scripts/ /
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -40,7 +40,7 @@ RUN --mount=type=tmpfs,dst=/tmp cd /tmp && \
     
 RUN apt install -y wget
 
-RUN scripts/proxmox.sh
+RUN bash /proxmox.sh
 
 RUN apt install -y \
   dracut \
@@ -50,7 +50,6 @@ RUN apt install -y \
   postfix \
   open-iscsi \
   chrony \
-  firmware-linux-free \
   systemd \
   btrfs-progs \
   e2fsprogs \
@@ -66,7 +65,8 @@ RUN apt install -y \
   skopeo \
   dbus \
   fdisk \
-  systemd-boot*
+  systemd-boot \
+  systemd-boot-efi
 
 RUN cp /usr/bin/bootc-initramfs-setup /usr/lib/dracut/modules.d/37composefs
 

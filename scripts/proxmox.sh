@@ -2,6 +2,8 @@
 
 set -ouex pipefail
 
+export DEBIAN_FRONTEND=noninteractive
+
 cat > /etc/apt/sources.list.d/pve-install-repo.sources << EOL
 Types: deb
 URIs: http://download.proxmox.com/debian/pve
